@@ -13,10 +13,12 @@ public class MobileMovement : MonoBehaviour
     bool grounded = false;
 
     Rigidbody2D rb;
+    Animator anim;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -25,11 +27,27 @@ public class MobileMovement : MonoBehaviour
         int inputDir = (int)Input.GetAxisRaw("Horizontal");
         moveDir += inputDir + mobileDir;
         moveDir = Mathf.Clamp(moveDir, -1, 1);
+
         Vector2 velocity = rb.velocity;
         velocity.x = moveDir * moveSpeed;
         rb.velocity = velocity;
 
-        if (Input.GetButtonDown("Jump"))
+        anim.SetFloat("xInput", moveDir);
+        
+        if (moveDir > 0)
+        {
+            Vector3 scale = transform.localScale;
+            scale.x = 1;
+            transform.localScale = scale;
+        }
+        if (moveDir < 0)
+        {
+            Vector3 scale = transform.localScale;
+            scale.x = -1;
+            transform.localScale = scale;
+        }
+
+            if (Input.GetButtonDown("Jump"))
         {
             Jump();
         }
